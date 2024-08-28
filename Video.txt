@@ -1,0 +1,9 @@
+ToDo List app with Vue Vite and Tailwind
+
+I am Arzu Ecem Tüfekçi a mechatronics engineering student from Turkiye. 
+
+Github: hurricane033
+EdX: arzuecem
+
+
+Date: 28.08.2024
