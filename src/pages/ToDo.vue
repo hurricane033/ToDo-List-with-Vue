@@ -3,7 +3,8 @@
         <div class="h-screen justify-center w-screen self-center">
             <!-- Title display and editing -->
             <div class=" top-20 absolute w-full flex justify-center">
-                <h1 v-if="!mtitle.editing" @dblclick="titleEdit" class="p-4 text-4xl text-slate-200 dark:text-slate-300">{{ maintitle }}
+                <h1 v-if="!mtitle.editing" @dblclick="titleEdit"
+                    class="p-4 text-4xl text-slate-200 dark:text-slate-300">{{ maintitle }}
                 </h1>
                 <input v-else maxlength="32" v-focus v-model="maintitle" @keyup.enter="doneTitleEdit"
                     @blur="doneTitleEdit" class="p-4 text-3xl text-slate-700 rounded-none border-none top-2">
@@ -12,13 +13,13 @@
 
         <!-- Filter buttons -->
         <div class=" relative right-8 scale-90 min-md:scale-100 w-fit top-20 gap-1 flex flex-col ">
-                <button :class="{ active: filter == 'all' }" @click="filter = 'all'"
-                    class="px-10 rounded-sm bg-slate-300 dark:bg-slate-400 border-r-slate-600 hover:bg-slate-200 focus:bg-slate-600 focus:translate-y-0.5">All</button>
-                <button type="button" :class="{ active: filter == 'active' }" @click="filter = 'active'"
-                    class="px-7 rounded-sm bg-slate-300 shadow-md dark:bg-slate-400 border-r-slate-600 hover:bg-slate-200 focus:bg-slate-600 focus:translate-y-0.5">Active</button>
-                <button type="button" :class="{ active: filter == 'completed' }" @click="filter = 'completed'"
-                    class="px-3 rounded-sm bg-slate-300 hover:bg-slate-200 dark:bg-slate-400 focus:bg-slate-600 focus:translate-y-0.5">Completed</button>
-            </div>
+            <button :class="{ active: filter == 'all' }" @click="filter = 'all'"
+                class="px-10 rounded-sm bg-slate-300 dark:bg-slate-400 border-r-slate-600 hover:bg-slate-200 focus:bg-slate-600 focus:translate-y-0.5">All</button>
+            <button type="button" :class="{ active: filter == 'active' }" @click="filter = 'active'"
+                class="px-7 rounded-sm bg-slate-300 shadow-md dark:bg-slate-400 border-r-slate-600 hover:bg-slate-200 focus:bg-slate-600 focus:translate-y-0.5">Active</button>
+            <button type="button" :class="{ active: filter == 'completed' }" @click="filter = 'completed'"
+                class="px-3 rounded-sm bg-slate-300 hover:bg-slate-200 dark:bg-slate-400 focus:bg-slate-600 focus:translate-y-0.5">Completed</button>
+        </div>
 
         <!-- Todo list -->
         <div
@@ -37,7 +38,8 @@
                     <input v-focus v-model="todo.title" @keyup.enter="doneEdit(todo)" @blur="doneEdit(todo)" v-else
                         class="rounded-none border-none r-0  w-fit h-min-32 py-2 text-md font-medium text-gray-900 dark:text-gray-300">
 
-                    <button type="button" @click="RemoveTodo(index)" class="right-2 absolute hover:bg-white dark:text-gray-300">
+                    <button type="button" @click="RemoveTodo(index)"
+                        class="right-2 absolute hover:bg-white dark:text-gray-300">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -61,7 +63,8 @@
 
 <script>
 import { collection, getDocs, addDoc, Timestamp, query, orderBy, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useRouter } from "vue-router";
 
 
 export default {
@@ -260,14 +263,16 @@ export default {
     },
 
     mounted() {
+        const router = useRouter();
+        const auth = getAuth();
         onAuthStateChanged(this.$auth, (user) => {
             this.user = user;
             if (user) {
                 this.fetchTodos();
                 this.fetchTitle();
             } else {
-                this.todos = [];
-                this.maintitle = '';
+                router.push('/login');
+                swal("Cautious", "Please sign in!");
             }
         });
     },
